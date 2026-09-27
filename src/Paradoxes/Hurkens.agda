@@ -44,9 +44,8 @@ module μ
 𝒫²[ ϕ ] = 𝒫[ 𝒫[ ϕ ] ]
 
 -- Intuition.
--- ⟦ fold Φ ⟧     = ⋂ { p | Φ p } = { x | ∀ p. Φ p → p x }
--- ⟦ unfold x ⟧   = { p | ∀ y ∈ x. p y }
--- ⟦ unfold x p ⟧ = x ⊆ p = (∀ y. y ∈ x → p y)
+-- ⟦ fold Φ ⟧     = ⋂ { {x | p x} | Φ p } = { x | ∀ p. Φ p → p x }
+-- ⟦ unfold x p ⟧ = ∀ y. y ∈ x → p y
 U : Set
 U = μ 𝒫²
 
@@ -68,14 +67,14 @@ _ = λ x p H y y∈x → y∈x p H
 -- Intuition.
 -- ⟦ ind p ⟧ = ∀ x. (∀ y. y ∈ x → p y) → p x
 -- ⟦ wf x ⟧  = ∀ p. ind p → p x
--- ⟦ Ω ⟧     = ⋂ { p | ind p }
+-- ⟦ Ω ⟧     = { x | wf x }
 --           = { x | ∀ p. ind p → p x }
---           = { x | wf x }
+--           = ⋂ { {x | p x} | ind p }
 ind : 𝒫 U → Set
-ind p = ∀ (x : U) → unfold x p → p x
+ind p = ∀ x → unfold x p → p x
 
 wf : U → Set
-wf x = ∀ (p : 𝒫 U) → ind p → p x
+wf x = ∀ p → ind p → p x
 
 Ω : U
 Ω = fold (λ p → ind p)
