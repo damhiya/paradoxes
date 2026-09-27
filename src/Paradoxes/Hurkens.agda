@@ -76,44 +76,46 @@ ind p = ∀ x → unfold x p → p x
 wf : U → Set
 wf x = ∀ p → ind p → p x
 
+wf-induction : ∀ x → wf x → ∀ p → ind p → p x
+wf-induction x x-wf p p-ind = x-wf p p-ind
+
+normal : U → Set
+normal x = ¬ fold (unfold x) ∈ x
+
+wf→normal : ∀ x → wf x → normal x
+wf→normal x x-wf = wf-induction x x-wf normal normal-ind
+  where
+    ∈-expand : ∀ x y → x ∈ y → fold (unfold x) ∈ fold (unfold y)
+    ∈-expand x y x∈y p = x∈y (λ z → p (fold (unfold z)))
+
+    normal-ind : ind normal
+    normal-ind x ∈x→normal x∈x = x∈x normal ∈x→normal (∈-expand (fold (unfold x)) x x∈x)
+
 Ω : U
 Ω = fold (λ p → ind p)
 
 Ω-wf : wf Ω
-Ω-wf p p-ind =
-  let
+Ω-wf p p-ind = p-ind Ω ∈Ω→p
+  where
     ∈Ω→p : unfold Ω p
     ∈Ω→p x = p-ind (fold (unfold x))
-  in p-ind Ω ∈Ω→p
 
 Ω∉Ω : ¬ fold (unfold Ω) ∈ Ω
-Ω∉Ω =
-  let
-    ϕ : 𝒫 U
-    ϕ = λ y → ¬ fold (unfold y) ∈ y
-
-    ∈-expand : ∀ x y → x ∈ y → fold (unfold x) ∈ fold (unfold y)
-    ∈-expand x y x∈y p = x∈y (λ z → p (fold (unfold z)))
-
-    ϕ-ind : ind ϕ
-    ϕ-ind = λ x ∈x→ϕ x∈x → x∈x ϕ ∈x→ϕ (∈-expand (fold (unfold x)) x x∈x)
-
-    wf-ϕ : ∀ x → wf x → ϕ x
-    wf-ϕ x x-wf = x-wf ϕ ϕ-ind
-  in wf-ϕ Ω Ω-wf
+Ω∉Ω = wf→normal Ω Ω-wf
 
 _ : ∀ Φ p → unfold (fold Φ) p ≡ Φ (λ x → p (fold (unfold x)))
 _ = λ Φ p → refl
 
 Ω∈Ω : fold (unfold Ω) ∈ Ω
-Ω∈Ω p ∈Ω→p =
-  let
+Ω∈Ω p ∈Ω→p = wf-induction Ω Ω-wf ϕ ϕ-ind
+  where
     ϕ : 𝒫 U
-    ϕ = λ x → p (fold (unfold x))
+    ϕ x = p (fold (unfold x))
 
+    -- ∈Ω→p : unfold Ω p
+    --      = ind ϕ
     ϕ-ind : ind ϕ
     ϕ-ind = ∈Ω→p
-  in Ω-wf ϕ ϕ-ind
 
 Hurkens : ⊥
 Hurkens = Ω∉Ω Ω∈Ω
