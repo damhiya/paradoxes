@@ -8,7 +8,7 @@ open import Data.Product.Base
 open import Relation.Binary.PropositionalEquality.Core
 open import Relation.Nullary.Negation.Core
 
-module Coquand92 where
+module Paradoxes.Coquand92 where
 
 data V : Set where
   set : ∀ (A : Set) → (A → V) → V

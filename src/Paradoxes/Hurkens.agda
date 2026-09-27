@@ -10,7 +10,7 @@ open import Data.Product.Base renaming (proj₁ to fst; proj₂ to snd)
 open import Relation.Nullary.Negation.Core
 open import Relation.Binary.PropositionalEquality.Core
 
-module Hurkens where
+module Paradoxes.Hurkens where
 
 -- Impredicative encoding of inductive types
 μ : (Set → Set) → Set

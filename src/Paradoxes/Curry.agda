@@ -1,7 +1,7 @@
-module Curry where
-
 open import Data.Empty
 open import Relation.Nullary.Negation.Core
+
+module Paradoxes.Curry where
 
 {-# NO_POSITIVITY_CHECK #-}
 data Curry : Set where

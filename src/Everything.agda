@@ -1,5 +1,5 @@
 module Everything where
 
-import Coquand92
-import Curry
-import Hurkens
+import Paradoxes.Coquand92
+import Paradoxes.Curry
+import Paradoxes.Hurkens
