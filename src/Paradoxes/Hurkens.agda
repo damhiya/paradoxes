@@ -82,9 +82,9 @@ wf x = ∀ p → ind p → p x
 Ω-wf : wf Ω
 Ω-wf p p-ind =
   let
-    Ω⊆p : unfold Ω p
-    Ω⊆p x = p-ind (fold (unfold x))
-  in p-ind Ω Ω⊆p
+    ∈Ω→p : unfold Ω p
+    ∈Ω→p x = p-ind (fold (unfold x))
+  in p-ind Ω ∈Ω→p
 
 Ω∉Ω : ¬ fold (unfold Ω) ∈ Ω
 Ω∉Ω =
@@ -96,7 +96,7 @@ wf x = ∀ p → ind p → p x
     ∈-expand x y x∈y p = x∈y (λ z → p (fold (unfold z)))
 
     ϕ-ind : ind ϕ
-    ϕ-ind = λ x x⊆ϕ x∈x → x∈x ϕ x⊆ϕ (∈-expand (fold (unfold x)) x x∈x)
+    ϕ-ind = λ x ∈x→ϕ x∈x → x∈x ϕ ∈x→ϕ (∈-expand (fold (unfold x)) x x∈x)
 
     wf-ϕ : ∀ x → wf x → ϕ x
     wf-ϕ x x-wf = x-wf ϕ ϕ-ind
@@ -106,13 +106,13 @@ _ : ∀ Φ p → unfold (fold Φ) p ≡ Φ (λ x → p (fold (unfold x)))
 _ = λ Φ p → refl
 
 Ω∈Ω : fold (unfold Ω) ∈ Ω
-Ω∈Ω p Ω⊆p =
+Ω∈Ω p ∈Ω→p =
   let
     ϕ : 𝒫 U
     ϕ = λ x → p (fold (unfold x))
 
     ϕ-ind : ind ϕ
-    ϕ-ind = Ω⊆p
+    ϕ-ind = ∈Ω→p
   in Ω-wf ϕ ϕ-ind
 
 Hurkens : ⊥
