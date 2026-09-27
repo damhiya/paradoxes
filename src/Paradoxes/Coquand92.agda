@@ -42,8 +42,6 @@ module Russell where
 
 module Burali-Forti where
 
-  -- Since we defined V as an inductive type,
-  -- every sets in V are inductive by construction
   ∈-induction : ∀ (P : V → Set)
                   (P-ind : ∀ x → (∀ y → y ∈ x → P y) → P x) →
                 ∀ x → P x
@@ -62,7 +60,9 @@ module Burali-Forti where
       P-ind x H x∈x = H x x∈x x∈x
     in ∈-induction P P-ind
 
-  -- set of all sets
+  -- Since V is inductively defined,
+  -- we can use "set of all sets"
+  -- instead of "set of all well-founded sets".
   Ω : V
   Ω = set V (λ x → x)
 
