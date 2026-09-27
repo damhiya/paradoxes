@@ -29,7 +29,7 @@ module μ
   intro u X ϕ = ϕ (F[ cata X ϕ ] u)
 
   match : μ F → F (μ F)
-  match u = u (F (μ F)) F[ intro ]
+  match = cata (F (μ F)) F[ intro ]
 
 -- Power set
 𝒫 : Set → Set
