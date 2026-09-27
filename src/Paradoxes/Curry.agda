@@ -4,14 +4,11 @@ open import Relation.Nullary.Negation.Core
 module Paradoxes.Curry where
 
 {-# NO_POSITIVITY_CHECK #-}
-data Curry : Set where
-  roll : (Curry → ⊥) → Curry
+data D : Set where
+  roll : (D → ⊥) → D
 
-not-curry : ¬ Curry
-not-curry (roll H) = H (roll H)
+ω : ¬ D
+ω (roll H) = H (roll H)
 
-curry : Curry
-curry = roll not-curry
-
-false : ⊥
-false = not-curry curry
+Ω : ⊥
+Ω = ω (roll ω)
