@@ -40,13 +40,13 @@ module Burali-Forti where
 
   -- Since we defined V as an inductive type,
   -- every sets in V are inductive by construction
-  ∈-ind : ∀ (P : V → Set)
-            (P-ind : ∀ x → (∀ y → y ∈ x → P y) → P x) →
-          ∀ x → P x
-  ∈-ind P P-ind (set A f) =
+  ∈-induction : ∀ (P : V → Set)
+                  (P-ind : ∀ x → (∀ y → y ∈ x → P y) → P x) →
+                ∀ x → P x
+  ∈-induction P P-ind (set A f) =
     P-ind
       (set A f)
-      λ { y (a , p) → subst P p (∈-ind P P-ind (f a)) }
+      λ { y (a , p) → subst P p (∈-induction P P-ind (f a)) }
 
   ∈-irrefl : ∀ x → ¬ x ∈ x
   ∈-irrefl =
@@ -56,7 +56,7 @@ module Burali-Forti where
 
       P-ind : ∀ x → (∀ y → y ∈ x → P y) → P x
       P-ind x H x∈x = H x x∈x x∈x
-    in ∈-ind P P-ind
+    in ∈-induction P P-ind
 
   Ω : V
   Ω = set V (λ x → x)
