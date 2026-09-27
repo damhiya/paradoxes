@@ -7,6 +7,7 @@
 
 open import Data.Empty
 open import Data.Product.Base renaming (proj₁ to fst; proj₂ to snd)
+open import Function.Base
 open import Relation.Nullary.Negation.Core
 open import Relation.Binary.PropositionalEquality.Core
 
@@ -55,7 +56,10 @@ fold = μ.fold 𝒫² 𝒫²[_]
 unfold : U → 𝒫² U
 unfold = μ.unfold 𝒫² 𝒫²[_]
 
-powerful : ∀ (Φ : 𝒫² U) → unfold (fold Φ) ≡ λ p → Φ (λ v → p (fold (unfold v)))
+δ : U → U
+δ x = fold (unfold x)
+
+powerful : ∀ Φ → unfold (fold Φ) ≡ λ p → Φ (p ∘ δ)
 powerful = λ Φ → refl
 
 _∈_ : U → U → Set
@@ -80,16 +84,16 @@ wf-induction : ∀ x → wf x → ∀ p → ind p → p x
 wf-induction x x-wf p p-ind = x-wf p p-ind
 
 normal : U → Set
-normal x = ¬ fold (unfold x) ∈ x
+normal x = ¬ δ x ∈ x
 
 wf→normal : ∀ x → wf x → normal x
 wf→normal x x-wf = wf-induction x x-wf normal normal-ind
   where
-    ∈-expand : ∀ x y → x ∈ y → fold (unfold x) ∈ fold (unfold y)
-    ∈-expand x y x∈y p = x∈y (λ z → p (fold (unfold z)))
+    ∈-expand : ∀ x y → x ∈ y → δ x ∈ δ y
+    ∈-expand x y x∈y p = x∈y (p ∘ δ)
 
     normal-ind : ind normal
-    normal-ind x ∈x→normal x∈x = x∈x normal ∈x→normal (∈-expand (fold (unfold x)) x x∈x)
+    normal-ind x ∈x→normal x∈x = x∈x normal ∈x→normal (∈-expand (δ x) x x∈x)
 
 Ω : U
 Ω = fold (λ p → ind p)
@@ -98,19 +102,16 @@ wf→normal x x-wf = wf-induction x x-wf normal normal-ind
 Ω-wf p p-ind = p-ind Ω ∈Ω→p
   where
     ∈Ω→p : unfold Ω p
-    ∈Ω→p x = p-ind (fold (unfold x))
+    ∈Ω→p x = p-ind (δ x)
 
-Ω∉Ω : ¬ fold (unfold Ω) ∈ Ω
+Ω∉Ω : ¬ δ Ω ∈ Ω
 Ω∉Ω = wf→normal Ω Ω-wf
 
-_ : ∀ Φ p → unfold (fold Φ) p ≡ Φ (λ x → p (fold (unfold x)))
-_ = λ Φ p → refl
-
-Ω∈Ω : fold (unfold Ω) ∈ Ω
+Ω∈Ω : δ Ω ∈ Ω
 Ω∈Ω p ∈Ω→p = wf-induction Ω Ω-wf ϕ ϕ-ind
   where
     ϕ : 𝒫 U
-    ϕ x = p (fold (unfold x))
+    ϕ x = p (δ x)
 
     -- ∈Ω→p : unfold Ω p
     --      = ind ϕ
