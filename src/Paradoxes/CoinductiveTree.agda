@@ -55,9 +55,15 @@ module Burali-Forti where
   ind : (V → Set) → Set
   ind p = ∀ x → (∀ y → y ∈ x → p y) → p x
 
-  -- well-founded set
+  -- well-foundedness is defined as the least inductive property
   wf : V → Set
   wf x = ∀ p → ind p → p x
+
+  wf-ind : ind wf
+  wf-ind x ∈x→wf p p-ind = p-ind x ∈x→p
+    where
+      ∈x→p : ∀ y → y ∈ x → p y
+      ∈x→p y y∈x = ∈x→wf y y∈x p p-ind
 
   wf-induction : ∀ x → wf x → ∀ p → ind p → p x
   wf-induction x x-wf p p-ind = x-wf p p-ind
@@ -73,13 +79,10 @@ module Burali-Forti where
   Ω = set (Σ[ x ∈ V ] wf x) proj₁
 
   Ω-wf : wf Ω
-  Ω-wf p p-ind = p-ind Ω ∈Ω→p
+  Ω-wf = wf-ind Ω ∈Ω→wf
     where
       ∈Ω→wf : ∀ x → x ∈ Ω → wf x
       ∈Ω→wf x ((.x , x-wf) , refl) = x-wf
-
-      ∈Ω→p : ∀ x → x ∈ Ω → p x
-      ∈Ω→p x x∈Ω = ∈Ω→wf x x∈Ω p p-ind
 
   Ω∉Ω : ¬ Ω ∈ Ω
   Ω∉Ω = wf→normal Ω Ω-wf
