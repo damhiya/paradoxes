@@ -37,26 +37,26 @@ module μ
 𝒫[_] : ∀ {X Y : Set} → (X → Y) → 𝒫 Y → 𝒫 X
 𝒫[ ϕ ] p x = p (ϕ x)
 
-𝒫𝒫 : Set → Set
-𝒫𝒫 X = 𝒫 (𝒫 X)
+𝒫² : Set → Set
+𝒫² X = 𝒫 (𝒫 X)
 
-𝒫𝒫[_] : ∀ {X Y : Set} → (X → Y) → 𝒫𝒫 X → 𝒫𝒫 Y
-𝒫𝒫[ ϕ ] = 𝒫[ 𝒫[ ϕ ] ]
+𝒫²[_] : ∀ {X Y : Set} → (X → Y) → 𝒫² X → 𝒫² Y
+𝒫²[ ϕ ] = 𝒫[ 𝒫[ ϕ ] ]
 
 -- Intuition.
 -- ⟦ fold Φ ⟧     = ⋂ { p | Φ p } = { x | ∀ p. Φ p → p x }
 -- ⟦ unfold x ⟧   = { p | ∀ y ∈ x. p y }
 -- ⟦ unfold x p ⟧ = x ⊆ p = (∀ y. y ∈ x → p y)
 U : Set
-U = μ 𝒫𝒫
+U = μ 𝒫²
 
-fold : 𝒫𝒫 U → U
-fold = μ.fold 𝒫𝒫 𝒫𝒫[_]
+fold : 𝒫² U → U
+fold = μ.fold 𝒫² 𝒫²[_]
 
-unfold : U → 𝒫𝒫 U
-unfold = μ.unfold 𝒫𝒫 𝒫𝒫[_]
+unfold : U → 𝒫² U
+unfold = μ.unfold 𝒫² 𝒫²[_]
 
-powerful : ∀ (Φ : 𝒫𝒫 U) → unfold (fold Φ) ≡ λ p → Φ (λ v → p (fold (unfold v)))
+powerful : ∀ (Φ : 𝒫² U) → unfold (fold Φ) ≡ λ p → Φ (λ v → p (fold (unfold v)))
 powerful = λ Φ → refl
 
 _∈_ : U → U → Set
