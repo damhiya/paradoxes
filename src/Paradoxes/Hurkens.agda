@@ -62,7 +62,7 @@ _∈_ : U → U → Set
 y ∈ x = ∀ (p : 𝒫 U) → unfold x p → p y
 
 _ : ∀ (x : U) (p : 𝒫 U) → unfold x p → (∀ y → y ∈ x → p y)
-_ = λ x p H y y∈x → y∈x p H
+_ = λ x p ∈x→p y y∈x → y∈x p ∈x→p
 
 -- Intuition.
 -- ⟦ ind p ⟧ = ∀ x. (∀ y. y ∈ x → p y) → p x

@@ -57,7 +57,7 @@ module Burali-Forti where
   ∈-irrefl = ∈-induction normal normal-ind
     where
       normal-ind : ind normal
-      normal-ind x H x∈x = H x x∈x x∈x
+      normal-ind x ∈x→normal x∈x = ∈x→normal x x∈x x∈x
 
   -- Since V is inductively defined, every sets are well-founded by construction.
   -- Hence we can use the set of all sets instead of the set of all well-founded sets.

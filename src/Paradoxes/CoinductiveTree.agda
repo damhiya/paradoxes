@@ -72,7 +72,7 @@ module Burali-Forti where
   wf→normal x x-wf = wf-induction x x-wf normal normal-ind
     where
       normal-ind : ind normal
-      normal-ind x H x∈x = H x x∈x x∈x
+      normal-ind x ∈x→normal x∈x = ∈x→normal x x∈x x∈x
 
   -- set of all well-founded sets
   Ω : V
