@@ -11,7 +11,7 @@ Reproduction of Russell's paradox using a universe containing itself.
 Curry's paradox.
 
 ## Hurkens
-Hurkens' paradox using a universe containing itself.
+Reproduction of Burali-Forti's paradox using a universe containing itself due to Hurkens.
 
 ## CoinductiveTree
 Coinductive version of Coquand92.
