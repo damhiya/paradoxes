@@ -25,39 +25,67 @@ open V
 _∈_ : V → V → Set
 y ∈ x = Σ[ a ∈ x .Index ] x .family a ≡ y
 
-ind : (V → Set) → Set
-ind p = ∀ x → (∀ y → y ∈ x → p y) → p x
+normal : V → Set
+normal x = ¬ x ∈ x
 
-wf : V → Set
-wf x = ∀ p → ind p → p x
+module Russell where
 
-wf-induction : ∀ x → wf x → ∀ p → ind p → p x
-wf-induction x x-wf p p-ind = x-wf p p-ind
+  -- set of all normal sets
+  R : V
+  R = set (Σ[ x ∈ V ] normal x) proj₁
 
-wf→normal : ∀ x → wf x → ¬ x ∈ x
-wf→normal =
-  let
-    P : V → Set
-    P x = ¬ x ∈ x
+  normal→∈R : ∀ x → normal x → x ∈ R
+  normal→∈R x x∉x = (x , x∉x) , refl
 
-    P-ind : ind P
-    P-ind x H x∈x = H x x∈x x∈x
-  in λ x x-wf → wf-induction x x-wf P P-ind
+  ∈R→normal : ∀ x → x ∈ R → normal x
+  ∈R→normal x ((.x , x∉x) , refl) = x∉x
 
-Ω : V
-Ω = set (Σ[ x ∈ V ] wf x) proj₁
+  R∉R : ¬ R ∈ R
+  R∉R R∈R = ∈R→normal R R∈R R∈R
 
-∈Ω→wf : ∀ x → x ∈ Ω → wf x
-∈Ω→wf x ((.x , x-wf) , refl) = x-wf
+  R∈R : R ∈ R
+  R∈R = normal→∈R R R∉R
 
-Ω-wf : wf Ω
-Ω-wf p p-ind = p-ind Ω λ x x∈Ω → ∈Ω→wf x x∈Ω p p-ind
+  Russell : ⊥
+  Russell = R∉R R∈R
 
-Ω∉Ω : ¬ Ω ∈ Ω
-Ω∉Ω = wf→normal Ω Ω-wf
+module Burali-Forti where
 
-Ω∈Ω : Ω ∈ Ω
-Ω∈Ω = (Ω , Ω-wf) , refl
+  -- inductive property
+  ind : (V → Set) → Set
+  ind p = ∀ x → (∀ y → y ∈ x → p y) → p x
 
-Burali-Forti : ⊥
-Burali-Forti = Ω∉Ω Ω∈Ω
+  -- well-founded set
+  wf : V → Set
+  wf x = ∀ p → ind p → p x
+
+  wf-induction : ∀ x → wf x → ∀ p → ind p → p x
+  wf-induction x x-wf p p-ind = x-wf p p-ind
+
+  wf→normal : ∀ x → wf x → normal x
+  wf→normal x x-wf = wf-induction x x-wf normal normal-ind
+    where
+      normal-ind : ind normal
+      normal-ind x H x∈x = H x x∈x x∈x
+
+  -- set of all well-founded sets
+  Ω : V
+  Ω = set (Σ[ x ∈ V ] wf x) proj₁
+
+  Ω-wf : wf Ω
+  Ω-wf p p-ind = p-ind Ω ∈Ω→p
+    where
+      ∈Ω→wf : ∀ x → x ∈ Ω → wf x
+      ∈Ω→wf x ((.x , x-wf) , refl) = x-wf
+
+      ∈Ω→p : ∀ x → x ∈ Ω → p x
+      ∈Ω→p x x∈Ω = ∈Ω→wf x x∈Ω p p-ind
+
+  Ω∉Ω : ¬ Ω ∈ Ω
+  Ω∉Ω = wf→normal Ω Ω-wf
+
+  Ω∈Ω : Ω ∈ Ω
+  Ω∈Ω = (Ω , Ω-wf) , refl
+
+  Burali-Forti : ⊥
+  Burali-Forti = Ω∉Ω Ω∈Ω
