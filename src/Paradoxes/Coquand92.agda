@@ -14,7 +14,7 @@ data V : Set where
   set : ∀ (A : Set) → (A → V) → V
 
 _∈_ : V → V → Set
-y ∈ set A f = Σ[ a ∈ A ] y ≡ f a
+y ∈ set A f = Σ[ a ∈ A ] f a ≡ y
 
 module Russell where
 
@@ -46,7 +46,7 @@ module Burali-Forti where
   ∈-ind P P-ind (set A f) =
     P-ind
       (set A f)
-      λ { y (a , p) → subst P (sym p) (∈-ind P P-ind (f a)) }
+      λ { y (a , p) → subst P p (∈-ind P P-ind (f a)) }
 
   ∈-irrefl : ∀ x → ¬ x ∈ x
   ∈-irrefl =
