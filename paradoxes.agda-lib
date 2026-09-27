@@ -1,0 +1,5 @@
+name: paradoxes
+depend: standard-library
+include: src
+flags:
+  --cubical-compatible
